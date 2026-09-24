@@ -11,6 +11,7 @@ class ListDishSerializer(ModelSerializer):
     """
 
     price = SerializerMethodField()
+    name = SerializerMethodField()
 
     class Meta:
         """
@@ -22,9 +23,17 @@ class ListDishSerializer(ModelSerializer):
 
     def get_price(self, obj):
         """
-        get
+        manipulates the price
         """
         current_time = datetime.now().time()
         if obj.lunch_action and time(10, 0) < current_time < time(14, 0):
             return f"{obj.price * 0.6} €"
         return f"{obj.price} €"
+
+    def get_name(self, obj):
+        """
+        manipulates the name
+        """
+        if obj.is_vegan:
+            return f"{obj.name} (vegan)"
+        return obj.name
